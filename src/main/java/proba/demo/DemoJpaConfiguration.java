@@ -17,6 +17,10 @@ import java.util.Properties;
 
 /**
  * http://www.baeldung.com/the-persistence-layer-with-spring-and-jpa
+ *
+ * Java 9 -> java.lang.NoClassDefFoundError  org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' javax.xml.bind.JAXBException
+ * Megoldás: --add-modules java.xml.bind
+ *
  */
 @Configuration
 @EnableTransactionManagement
@@ -26,7 +30,7 @@ public class DemoJpaConfiguration {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[] { "org.baeldung.persistence.model" });
+        em.setPackagesToScan(new String[] { "common.model" });
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -38,10 +42,10 @@ public class DemoJpaConfiguration {
     @Bean
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/spring_jpa");
-        dataSource.setUsername( "tutorialuser" );
-        dataSource.setPassword( "tutorialmy5ql" );
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/");
+        dataSource.setUsername( "postgres" );
+        dataSource.setPassword( "Demo.123" );
         return dataSource;
     }
 
@@ -60,8 +64,8 @@ public class DemoJpaConfiguration {
 
     Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        //properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        //properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return properties;
     }
 
